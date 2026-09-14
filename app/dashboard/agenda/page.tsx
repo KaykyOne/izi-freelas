@@ -33,6 +33,23 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
+// Número do dia sem zero à esquerda e cabeçalho curto deixam a grade do mês menos poluída.
+const formats = {
+  dateFormat: "d",
+  // O "EEE" do pt-BR no date-fns devolve o nome inteiro ("domingo"), então a abreviação é manual.
+  weekdayFormat: (date: Date) => format(date, "EEEE", { locale: ptBR }).slice(0, 3),
+  dayFormat: (date: Date) => `${format(date, "EEEE", { locale: ptBR }).slice(0, 3)} ${format(date, "d")}`,
+  timeGutterFormat: "HH:mm",
+  eventTimeRangeFormat: ({ start, end }: { start: Date; end: Date }) =>
+    `${format(start, "HH:mm")} – ${format(end, "HH:mm")}`,
+  agendaTimeRangeFormat: ({ start, end }: { start: Date; end: Date }) =>
+    `${format(start, "HH:mm")} – ${format(end, "HH:mm")}`,
+  agendaDateFormat: (date: Date) => format(date, "EEE, d 'de' MMM", { locale: ptBR }),
+};
+
+// Semana/Dia abrem no começo do expediente em vez de meia-noite.
+const SCROLL_TO_TIME = new Date(1970, 0, 1, 7);
+
 const messages = {
   today: "Hoje",
   previous: "Anterior",
@@ -113,7 +130,7 @@ export default function AgendaPage() {
         </Button>
       </div>
 
-      <div className="min-h-[36rem] flex-1">
+      <div className="izi-calendar min-h-[36rem] flex-1">
         {isLoading ? (
           <CardSkeleton lines={10} className="h-full min-h-[36rem] p-6" />
         ) : (
@@ -121,6 +138,8 @@ export default function AgendaPage() {
             localizer={localizer}
             culture="pt-BR"
             messages={messages}
+            formats={formats}
+            scrollToTime={SCROLL_TO_TIME}
             events={calendarEvents}
             view={view}
             date={date}

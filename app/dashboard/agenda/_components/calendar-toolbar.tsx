@@ -27,33 +27,35 @@ export function CalendarToolbar({ label, view, views, onNavigate, onView }: Tool
   );
 
   return (
-    <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-center gap-1.5">
-        <Button
-          type="button"
-          variant="outline"
-          size="icon-sm"
-          onClick={() => onNavigate("PREV")}
-          aria-label="Período anterior"
-        >
-          <ChevronLeft />
-        </Button>
-        <Button type="button" variant="outline" size="sm" onClick={() => onNavigate("TODAY")}>
-          Hoje
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="icon-sm"
-          onClick={() => onNavigate("NEXT")}
-          aria-label="Próximo período"
-        >
-          <ChevronRight />
-        </Button>
-        <h2 className="ml-2 text-lg font-bold tracking-[-0.02em] text-foreground capitalize">{label}</h2>
+    <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-3">
+        <div className="flex items-center rounded-lg border bg-card p-0.5">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => onNavigate("PREV")}
+            aria-label="Período anterior"
+          >
+            <ChevronLeft />
+          </Button>
+          <Button type="button" variant="ghost" size="sm" className="px-3 font-semibold" onClick={() => onNavigate("TODAY")}>
+            Hoje
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => onNavigate("NEXT")}
+            aria-label="Próximo período"
+          >
+            <ChevronRight />
+          </Button>
+        </div>
+        <h2 className="text-xl font-semibold tracking-[-0.03em] text-foreground capitalize">{label}</h2>
       </div>
 
-      <div className="flex gap-1 rounded-md border p-1">
+      <div className="flex w-fit gap-0.5 rounded-lg border bg-muted/40 p-0.5">
         {availableViews.map((viewKey) => (
           <Button
             key={viewKey}
@@ -61,7 +63,11 @@ export function CalendarToolbar({ label, view, views, onNavigate, onView }: Tool
             variant="ghost"
             size="sm"
             onClick={() => onView(viewKey)}
-            className={cn("h-8 px-3", view === viewKey && "bg-accent font-bold text-accent-foreground")}
+            aria-pressed={view === viewKey}
+            className={cn(
+              "px-3 text-muted-foreground hover:bg-transparent hover:text-foreground dark:hover:bg-transparent",
+              view === viewKey && "bg-card font-semibold text-foreground shadow-sm hover:bg-card dark:hover:bg-card",
+            )}
           >
             {viewLabels[viewKey]}
           </Button>
