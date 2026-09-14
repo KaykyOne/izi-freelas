@@ -3,6 +3,8 @@
 //* Components Imports
 import Skeleton from "@/components/ui/skeleton";
 
+import { InstallAppButton } from "@/components/install-app-button";
+
 import { OverviewDetailDialog, type OverviewDetailItem } from "./_components/overview-detail-dialog";
 import { OverviewMetricCard } from "./_components/overview-metric-card";
 
@@ -117,13 +119,16 @@ export default function DashboardPage() {
 
   return (
     <section className="mx-auto w-full max-w-5xl space-y-12">
-      <header className="pt-4">
-        {isLoadingProfile || !greeting ? (
-          <Skeleton className="h-10 w-72" />
-        ) : (
-          <h1 className="text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl">{greeting}</h1>
-        )}
-        <p className="mt-3 text-sm text-muted-foreground">{formatDateLong(hojeIso)}</p>
+      <header className="flex flex-wrap items-start justify-between gap-4 pt-4">
+        <div>
+          {isLoadingProfile || !greeting ? (
+            <Skeleton className="h-10 w-72" />
+          ) : (
+            <h1 className="text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl">{greeting}</h1>
+          )}
+          <p className="mt-3 text-sm text-muted-foreground">{formatDateLong(hojeIso)}</p>
+        </div>
+        <InstallAppButton variant="outline" size="lg" className="h-10 px-4 text-sm font-semibold" />
       </header>
 
       <div className="space-y-4">

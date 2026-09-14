@@ -8,6 +8,8 @@ import Card from "@/components/ui/card";
 import Collapsible from "@/components/ui/collapsible";
 import Separator from "@/components/ui/separator";
 
+import { InstallAppButton } from "@/components/install-app-button";
+
 import { AuthBrand } from "./auth-brand";
 import { SiteFooter } from "./site-footer";
 
@@ -233,6 +235,11 @@ export function LandingPage() {
               >
                 Já tenho conta
               </Button>
+              <InstallAppButton
+                variant="ghost"
+                size="lg"
+                className="h-12 rounded-md px-6 text-sm font-bold"
+              />
             </div>
 
             <p className="mt-6 flex items-center gap-2 text-xs font-semibold text-muted-foreground">
