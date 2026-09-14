@@ -1,151 +1,363 @@
-/* Reskin of react-big-calendar to match the app's monochrome design tokens (light + dark). */
+/*
+ * Reskin do react-big-calendar com os tokens do app (claro + escuro).
+ * Tudo fica sob `.izi-calendar`: a especificidade extra garante que o tema vence o CSS padrão da
+ * lib independente da ordem dos imports — antes o CSS da lib vinha depois e pintava dia de fora do
+ * mês de cinza claro, "hoje" de azul claro e eventos de azul, mesmo no tema escuro.
+ */
 
-.rbc-calendar {
+.izi-calendar {
+  --cal-line: color-mix(in oklch, var(--border) 80%, transparent);
+  --cal-hover: color-mix(in oklch, var(--foreground) 3%, transparent);
+  --cal-off: color-mix(in oklch, var(--muted) 35%, transparent);
+  --cal-event-bg: color-mix(in oklch, var(--foreground) 9%, var(--card));
+  --cal-event-bg-hover: color-mix(in oklch, var(--foreground) 15%, var(--card));
+}
+
+.izi-calendar .rbc-calendar {
   font-family: var(--font-geist-sans), sans-serif;
   color: var(--foreground);
 }
 
-.rbc-month-view,
-.rbc-time-view,
-.rbc-agenda-view {
+/* ---------- Containers ---------- */
+
+.izi-calendar .rbc-month-view,
+.izi-calendar .rbc-time-view,
+.izi-calendar .rbc-agenda-view {
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: calc(var(--radius) + 4px);
   overflow: hidden;
   background: var(--card);
 }
 
-.rbc-header {
-  padding: 0.6rem 0.4rem;
-  font-size: 0.68rem;
-  font-weight: 700;
+/* ---------- Cabeçalho dos dias da semana ---------- */
+
+.izi-calendar .rbc-month-header,
+.izi-calendar .rbc-time-header-cell {
+  background: color-mix(in oklch, var(--muted) 40%, var(--card));
+}
+
+.izi-calendar .rbc-header {
+  padding: 0.7rem 0.75rem;
+  min-height: 0;
+  font-size: 0.66rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   color: var(--muted-foreground);
+  text-align: left;
   border-bottom: 1px solid var(--border);
 }
 
-.rbc-header + .rbc-header,
-.rbc-day-bg + .rbc-day-bg,
-.rbc-time-header-content,
-.rbc-time-content > * + * > *,
-.rbc-agenda-view table.rbc-agenda-table tbody > tr > td + td {
-  border-color: var(--border);
+.izi-calendar .rbc-header + .rbc-header {
+  border-left: 1px solid var(--cal-line);
 }
 
-.rbc-month-row + .rbc-month-row,
-.rbc-day-slot .rbc-time-slot,
-.rbc-timeslot-group,
-.rbc-time-header > .rbc-row:first-child,
-.rbc-agenda-view table.rbc-agenda-table thead > tr > th,
-.rbc-agenda-view table.rbc-agenda-table tbody > tr + tr,
-.rbc-time-content {
-  border-color: var(--border);
+/* O reset de <button> do navegador zera text-transform/letter-spacing, então é preciso herdar. */
+.izi-calendar .rbc-header .rbc-button-link {
+  font: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
 }
 
-.rbc-off-range-bg {
-  background: var(--muted);
+/* ---------- Mês ---------- */
+
+.izi-calendar .rbc-month-row + .rbc-month-row {
+  border-top: 1px solid var(--cal-line);
 }
 
-.rbc-off-range {
-  color: var(--muted-foreground);
+.izi-calendar .rbc-day-bg {
+  transition: background-color 120ms ease;
 }
 
-.rbc-today {
-  background-color: var(--accent);
+.izi-calendar .rbc-day-bg + .rbc-day-bg {
+  border-left: 1px solid var(--cal-line);
 }
 
-.rbc-date-cell {
-  padding: 0.35rem 0.5rem 0;
-  font-size: 0.8rem;
-  color: var(--muted-foreground);
+.izi-calendar .rbc-day-bg:hover {
+  background-color: var(--cal-hover);
 }
 
-.rbc-date-cell.rbc-now {
+.izi-calendar .rbc-off-range-bg {
+  background-color: var(--cal-off);
+}
+
+.izi-calendar .rbc-today {
+  background-color: color-mix(in oklch, var(--foreground) 4%, transparent);
+}
+
+.izi-calendar .rbc-date-cell {
+  padding: 0.45rem 0.5rem 0.2rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
   color: var(--foreground);
+}
+
+.izi-calendar .rbc-date-cell .rbc-button-link {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.6rem;
+  height: 1.6rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  font: inherit;
+  color: inherit;
+  transition: background-color 120ms ease;
+}
+
+.izi-calendar .rbc-date-cell .rbc-button-link:hover {
+  background-color: var(--muted);
+}
+
+.izi-calendar .rbc-date-cell.rbc-off-range {
+  color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+}
+
+.izi-calendar .rbc-date-cell.rbc-now {
   font-weight: 700;
 }
 
-.rbc-event {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  border: none;
-  border-radius: calc(var(--radius) - 4px);
-  padding: 2px 6px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  box-shadow: none;
-}
-
-.rbc-event.rbc-selected,
-.rbc-event:focus {
+.izi-calendar .rbc-date-cell.rbc-now .rbc-button-link {
   background-color: var(--foreground);
   color: var(--background);
-  outline: none;
 }
 
-.rbc-day-slot .rbc-event,
-.rbc-day-slot .rbc-background-event {
-  border: none;
+.izi-calendar .rbc-row-segment {
+  padding: 1px 0.35rem;
 }
 
-.rbc-show-more {
-  background: transparent;
+/* ---------- Eventos ---------- */
+
+.izi-calendar .rbc-event,
+.izi-calendar .rbc-day-slot .rbc-background-event {
+  background-color: var(--cal-event-bg);
   color: var(--foreground);
-  font-weight: 700;
+  border: none;
+  border-left: 3px solid var(--foreground);
+  border-radius: 0.3rem;
+  padding: 0.2rem 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.25;
+  box-shadow: none;
+  transition: background-color 120ms ease;
+}
+
+.izi-calendar .rbc-event:hover {
+  background-color: var(--cal-event-bg-hover);
+}
+
+.izi-calendar .rbc-event.rbc-selected,
+.izi-calendar .rbc-day-slot .rbc-selected.rbc-background-event {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+.izi-calendar .rbc-event:focus,
+.izi-calendar .rbc-event:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
+.izi-calendar .rbc-event-label {
+  font-size: 0.66rem;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.izi-calendar .rbc-show-more {
+  margin: 0.1rem 0.35rem 0;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.3rem;
+  background: transparent;
+  color: var(--muted-foreground);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.izi-calendar .rbc-show-more:hover,
+.izi-calendar .rbc-show-more:focus {
+  background: var(--muted);
+  color: var(--foreground);
+}
+
+/* ---------- Semana / Dia ---------- */
+
+.izi-calendar .rbc-time-header.rbc-overflowing {
+  border-right: 1px solid var(--border);
+}
+
+.izi-calendar .rbc-time-header-content {
+  border-left: 1px solid var(--cal-line);
+}
+
+.izi-calendar .rbc-time-header-content > .rbc-row.rbc-row-resource,
+.izi-calendar .rbc-allday-cell .rbc-row-bg .rbc-day-bg {
+  border-color: var(--cal-line);
+}
+
+.izi-calendar .rbc-allday-cell {
+  border-bottom: 1px solid var(--border);
+}
+
+.izi-calendar .rbc-time-content {
+  border-top: none;
+}
+
+.izi-calendar .rbc-time-content > * + * > * {
+  border-left: 1px solid var(--cal-line);
+}
+
+.izi-calendar .rbc-timeslot-group {
+  min-height: 3rem;
+  border-bottom: 1px solid var(--cal-line);
+}
+
+.izi-calendar .rbc-day-slot .rbc-time-slot {
+  border-top: 1px dashed color-mix(in oklch, var(--border) 45%, transparent);
+}
+
+.izi-calendar .rbc-time-gutter .rbc-timeslot-group {
+  border-bottom: none;
+}
+
+.izi-calendar .rbc-time-gutter .rbc-label {
+  display: block;
+  padding: 0 0.6rem;
+  margin-top: -0.45rem;
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-foreground);
+}
+
+.izi-calendar .rbc-time-header-gutter {
+  border-bottom: 1px solid var(--border);
+}
+
+.izi-calendar .rbc-day-slot .rbc-events-container {
+  margin-right: 0.4rem;
+}
+
+.izi-calendar .rbc-day-slot .rbc-event {
+  border: none;
+  border-left: 3px solid var(--foreground);
+}
+
+.izi-calendar .rbc-time-view .rbc-today {
+  background-color: color-mix(in oklch, var(--foreground) 3%, transparent);
+}
+
+.izi-calendar .rbc-time-header-cell .rbc-today {
+  color: var(--foreground);
+}
+
+.izi-calendar .rbc-current-time-indicator {
+  height: 2px;
+  background-color: var(--foreground);
+}
+
+.izi-calendar .rbc-slot-selection {
+  background-color: color-mix(in oklch, var(--foreground) 14%, transparent);
+  color: var(--foreground);
+  border-left: 3px solid var(--foreground);
   font-size: 0.7rem;
 }
 
-.rbc-show-more:hover,
-.rbc-show-more:focus {
-  color: var(--muted-foreground);
+.izi-calendar .rbc-selected-cell {
+  background-color: color-mix(in oklch, var(--foreground) 8%, transparent);
 }
 
-.rbc-agenda-view table.rbc-agenda-table {
+/* ---------- Agenda (lista) ---------- */
+
+.izi-calendar .rbc-agenda-view table.rbc-agenda-table {
   border: none;
+  font-size: 0.82rem;
 }
 
-.rbc-agenda-date-cell,
-.rbc-agenda-time-cell {
-  color: var(--muted-foreground);
-  font-size: 0.8rem;
-}
-
-.rbc-agenda-view table.rbc-agenda-table thead > tr > th {
+.izi-calendar .rbc-agenda-view table.rbc-agenda-table thead > tr > th {
+  padding: 0.7rem 0.9rem;
+  background: color-mix(in oklch, var(--muted) 40%, var(--card));
+  border-bottom: 1px solid var(--border);
+  text-align: left;
   text-transform: uppercase;
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
   color: var(--muted-foreground);
-  font-weight: 700;
+  font-weight: 600;
 }
 
-.rbc-time-gutter .rbc-label,
-.rbc-time-header-gutter {
+.izi-calendar .rbc-agenda-view table.rbc-agenda-table tbody > tr > td {
+  padding: 0.7rem 0.9rem;
+  vertical-align: middle;
+}
+
+.izi-calendar .rbc-agenda-view table.rbc-agenda-table tbody > tr > td + td {
+  border-left: 1px solid var(--cal-line);
+}
+
+.izi-calendar .rbc-agenda-view table.rbc-agenda-table tbody > tr + tr {
+  border-top: 1px solid var(--cal-line);
+}
+
+.izi-calendar .rbc-agenda-view table.rbc-agenda-table tbody > tr {
+  background: transparent !important;
+  color: var(--foreground) !important;
+  transition: background-color 120ms ease;
+}
+
+.izi-calendar .rbc-agenda-view table.rbc-agenda-table tbody > tr:hover {
+  background: var(--cal-hover) !important;
+}
+
+.izi-calendar .rbc-agenda-date-cell,
+.izi-calendar .rbc-agenda-time-cell {
   color: var(--muted-foreground);
-  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.rbc-current-time-indicator {
-  background-color: var(--foreground);
-  opacity: 0.6;
+.izi-calendar .rbc-agenda-event-cell {
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.rbc-slot-selection {
-  background-color: color-mix(in oklch, var(--foreground) 65%, transparent);
+.izi-calendar .rbc-agenda-empty {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
 }
 
-.rbc-overlay {
+/* ---------- Popup "+N mais" ---------- */
+/* O popup pode ser renderizado fora do wrapper; `body` dá a especificidade sem depender dele. */
+
+body .rbc-overlay {
+  padding: 0.6rem;
   background: var(--popover);
   color: var(--popover-foreground);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.35);
+  border-radius: calc(var(--radius) + 2px);
+  box-shadow: 0 16px 40px -16px rgba(0, 0, 0, 0.45);
 }
 
-.rbc-overlay-header {
+body .rbc-overlay .rbc-overlay-header {
+  margin: -0.6rem -0.6rem 0.5rem;
+  padding: 0.55rem 0.8rem;
   border-bottom: 1px solid var(--border);
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
-.rbc-selected-cell {
-  background-color: var(--muted);
+body .rbc-overlay .rbc-event {
+  margin-bottom: 0.25rem;
+  background-color: color-mix(in oklch, var(--foreground) 9%, var(--popover));
+  color: var(--foreground);
+  border: none;
+  border-left: 3px solid var(--foreground);
+  border-radius: 0.3rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
 }
